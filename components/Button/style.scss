@@ -1,0 +1,35 @@
+.btn.btn_primary {
+    background: #fff;
+    padding-right: 20px;
+    padding-left: 20px;
+    color: #000000;
+    border-radius: 5px;
+    line-height: 42px;
+    font-size: 14px;
+    font-weight: 400;
+
+    &:hover {
+        background: #1993ff;
+        svg path {
+            fill: #fff;
+        }
+        color: #fff;
+    }
+
+    svg {
+        margin-left: 5px;
+    }
+}
+
+.btn_secondary {
+    background: #1993FD;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 42px;
+    border-radius: 5px;
+
+    &.btn_block {
+        display: block;
+        width: 100%;
+    }
+}

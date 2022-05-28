@@ -1,0 +1,18 @@
+.form-group {
+    display: block;
+    width: 100%;
+    border-radius: 5px;
+
+    input {
+        width: 100%;
+        min-height: 55px;
+        padding: 0 16px;
+        box-shadow: rgb(55 56 62) 0px 0px 0px 1000px inset;
+        outline: none;
+        border-radius: 5px;
+        background: transparent;
+        &::placeholder{
+            color: #fff;
+        }
+    }
+}
