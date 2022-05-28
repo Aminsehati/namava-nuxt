@@ -28,10 +28,10 @@ export default {
       type: Boolean,
       default: false,
     },
-    type:{
-      type:String,
-      default:"text"
-    }
+    type: {
+      type: String,
+      default: 'text',
+    },
   },
   methods: {
     updateValue(e) {
@@ -40,9 +40,11 @@ export default {
       this.$emit('onchange', value)
     },
     keypress(e) {
-      if (e.keyCode >= 48 && e.keyCode <= 57) {
-      } else {
-        e.preventDefault()
+      if (this.hasPhoneNumber) {
+        if (e.keyCode >= 48 && e.keyCode <= 57) {
+        } else {
+          e.preventDefault()
+        }
       }
     },
   },

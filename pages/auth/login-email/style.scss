@@ -1,0 +1,22 @@
+.auth-login-email {
+  min-height: 100vh;
+  background-color: #121212;
+  background-image: radial-gradient(at bottom, #1993ff, #121212 70%);
+  .wrapper {
+    max-width: 660px;
+    color: #fff;
+    margin: 0 auto;
+    .header-auth {
+      padding: 50px 0;
+    }
+    .box-auth {
+      padding: 40px 80px 70px 80px;
+    }
+  }
+}
+@media (min-width: 800px) and (max-width: 1279px) {
+  .auth-login-email .wrapper {
+    max-width: 440px;
+    padding: 40px 40px 70px 40px;
+  }
+}
