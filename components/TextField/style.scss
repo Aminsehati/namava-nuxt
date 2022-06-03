@@ -11,8 +11,28 @@
         outline: none;
         border-radius: 5px;
         background: transparent;
-        &::placeholder{
+        font-size: 14px;
+
+        &::placeholder {
             color: #fff;
         }
+    }
+
+    &.light_form-group {
+        input {
+            box-shadow: rgb(242 242 242) 0px 0px 0px 1000px inset;
+            color: rgb(55, 56, 62);
+            font-weight: 400;
+            &::placeholder{
+                color: rgb(55, 56, 62);
+                font-weight: 500;
+            }
+        }
+    }
+}
+
+@media screen and (max-width:992px) {
+    .form-group input {
+        font-size: 12px;
     }
 }

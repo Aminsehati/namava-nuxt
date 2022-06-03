@@ -2,15 +2,43 @@
     min-height: 100vh;
     background-color: #121212;
     background-image: radial-gradient(at bottom, #1993ff, #121212 70%);
-    .wrapper{
+    .wrapper {
         max-width: 660px;
         color: #fff;
         margin: 0 auto;
-        .header-auth{
+
+        .header-auth {
             padding: 50px 0;
         }
-        .box-auth{
+
+        .box-auth {
             padding: 40px 80px 70px 80px;
+        }
+    }
+    .loading-wrapper{
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (min-width: 800px) and (max-width: 1279px) {
+    .auth-login-phone .wrapper {
+        max-width: 440px;
+        .box-auth {
+            padding: 40px 40px 70px 40px;
+        }
+    }
+}
+@media screen and (max-width:800px){
+    .auth-login-phone .wrapper{
+        max-width: 100%;
+        .header-auth{
+            padding: 50px 20px;
+        }
+        .box-auth {
+            padding: 40px 20px 20px 40px;
         }
     }
 }

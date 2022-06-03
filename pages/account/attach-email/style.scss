@@ -1,0 +1,58 @@
+.account-attach-email {
+    background-color: #f2f2f2;
+    min-height: 100vh;
+    padding-top: 130px;
+
+    .account-box {
+        width: 420px;
+        border-radius: 5px;
+        background-color: #ffffff;
+        margin: 0 auto;
+        padding: 36px 32px 40px 32px;
+        box-shadow: 0 5px 15px 0 rgb(0 0 0 / 25%);
+
+        .logo__area {
+            svg {
+                height: 38px;
+                width: auto;
+
+                path {
+                    fill: #1993ff;
+                }
+            }
+        }
+
+        .verify_otp p {
+            line-height: 27px;
+        }
+    }
+
+    .loading_wrapper {
+        min-height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .edit_email {
+        color: #1993ff;
+        font-weight: 500;
+    }
+    .countDown , .send_again_otp{
+        color: #666666;
+        font-weight: 500;
+    }
+}
+
+@media screen and (min-width:800px) {
+    .account-attach-email .account-box {
+        width: 420px;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .account-attach-email .account-box {
+        width: 100%;
+        padding: 36px 15px 40px 15px;
+    }
+}

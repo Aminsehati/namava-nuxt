@@ -28,5 +28,33 @@ class AuthService {
       data
     })
   }
+  sendOtpByEmailRegister(data) {
+    return api({
+      url: 'Auth/register/by-email/send-otp',
+      method: 'post',
+      data
+    })
+  }
+  verifyOtpByEmailRegister(data) {
+    return api({
+      url: 'Auth/register/by-email/verify-otp',
+      method: 'post',
+      data
+    })
+  }
+  sendOtpByPhoneRegister(data){
+    return api({
+      url: 'Auth/register/by-phone/send-otp',
+      method: 'post',
+      data
+    })
+  }
+  verifyOtpByPhoneRegister(data){
+    return api({
+      url: 'Auth/register/by-phone/verify-otp',
+      method: 'post',
+      data
+    })
+  }
 }
 export default new AuthService()

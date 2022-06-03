@@ -1,4 +1,4 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,10 +6,17 @@
     direction: rtl;
     user-select: none;
 }
-html{
+
+html {
     font-size: 14px;
 }
-body{
+
+body {
     font-size: 1rem;
     font-weight: 400;
+}
+
+ul,
+li {
+    list-style: none;
 }

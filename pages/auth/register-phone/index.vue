@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-login-phone">
+  <div class="auth-register-phone">
     <div class="wrapper">
       <div class="header-auth flex items-center justify-between">
         <nuxt-link to="/">
@@ -33,7 +33,7 @@
               <TextField
                 placeholder="شماره تلفن همراه"
                 class="mb-20"
-                v-model="loginInfo.phoneNumber"
+                v-model="registerInfo.phoneNumber"
                 @onEnter="sendOtp"
               />
             </div>
@@ -52,7 +52,7 @@
               <h2 class="lg:text-18 md:text-16 mb-15">کد فعالسازی</h2>
               <p class="text-12 text-light">
                 یک کد به شماره
-                {{ loginInfo.phoneNumber }}
+                {{ registerInfo.phoneNumber }}
                 پیامک شد . لطفا کد را وارد کنید
               </p>
             </div>
@@ -61,7 +61,7 @@
                 placeholder="کد فعالسازی"
                 class="mb-20"
                 type="pass"
-                v-model="loginInfo.otp"
+                v-model="registerInfo.otp"
                 @onEnter="verifyOtp"
               />
             </div>
@@ -104,7 +104,7 @@ export default {
   data() {
     return {
       showBoxVerifyPhone: false,
-      loginInfo: {
+      registerInfo: {
         phoneNumber: '',
         otp: '',
         sign: '',
@@ -120,7 +120,7 @@ export default {
   methods: {
     validatePhoneNumber() {
       const regex = /^((\+98|0)9\d{9})$/gm
-      return regex.test(this.loginInfo.phoneNumber)
+      return regex.test(this.registerInfo.phoneNumber)
     },
     async sendOtp() {
       if (this.validatePhoneNumber()) {
@@ -131,11 +131,11 @@ export default {
       this.filters.loading = true
       this.error.message = ''
       try {
-        const httpRequest = await AuthService.sendOtpByPhoneLogin({
-          phone: this.loginInfo.phoneNumber,
+        const httpRequest = await AuthService.sendOtpByPhoneRegister({
+          phone: this.registerInfo.phoneNumber,
         })
         if (httpRequest.isSuccess) {
-          this.loginInfo.sign = httpRequest.data.sign
+          this.registerInfo.sign = httpRequest.data.sign
           if (!this.showBoxVerifyPhone) {
             this.showBoxVerifyPhone = !this.showBoxVerifyPhone
           }
@@ -152,9 +152,9 @@ export default {
       this.filters.loading = true
       this.error.message = ''
       try {
-        const httpRequest = await AuthService.verifyOtpByPhoneLogin({
-          otp: this.loginInfo.otp,
-          sign: this.loginInfo.sign,
+        const httpRequest = await AuthService.verifyOtpByPhoneRegister({
+          otp: this.registerInfo.otp,
+          sign: this.registerInfo.sign,
         })
         if (httpRequest.isSuccess) {
           const token = httpRequest?.data?.token || ''

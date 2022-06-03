@@ -1,0 +1,61 @@
+.account-page {
+    background: #f2f2f2;
+
+    .wrapper {
+        min-height: calc(100vh - 302px);
+        padding-bottom: 150px;
+    }
+
+    .t_title {
+        padding: 32px 0px 40px;
+
+        h2 {
+            color: rgb(34, 35, 39);
+        }
+    }
+    .loading_wrapper{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 150px;
+    }
+    .box-account-page {
+        width: 452px;
+        margin: 0 auto;
+
+        .fullName_item,
+        .email_item {
+            a {
+                color: #1993ff;
+            }
+        }
+    }
+}
+
+@media screen and (min-width:800px) {
+    .account-page .box-account-page .white_card {
+        background: #fff;
+        padding: 24px 24px 40px 24px;
+        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 16%);
+        border-radius: 16px;
+    }
+}
+
+@media screen and (max-width:800px) {
+    .account-page .box-account-page {
+        width: 100%;
+        padding: 0 15px;
+    }
+}
+
+@media screen and (min-width:800px) and (max-width:1279px) {
+    .account-page .t_title {
+        padding: 24px 0px 28px;
+    }
+}
+
+@media screen and (min-width:500px) and (max-width:799px) {
+    .account-page .t_title {
+        padding: 32px 0px 36px;
+    }
+}

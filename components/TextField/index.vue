@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div :class="['form-group', { 'light_form-group': light }]">
     <input
       :type="type"
       class="form-control"
@@ -31,6 +31,10 @@ export default {
     type: {
       type: String,
       default: 'text',
+    },
+    light: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {

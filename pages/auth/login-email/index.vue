@@ -5,17 +5,22 @@
         <nuxt-link to="/">
           <IconLogo />
         </nuxt-link>
-        <Button primary class="flex items-center">
+        <Button primary class="flex items-center" @onClick="$router.push('/auth/register-email')">
           <IconRegister />
           ثبت نام
         </Button>
       </div>
       <BoxDark>
-        <div class="box-auth">
+        <div class="loading-wrapper" v-if="filters.loading">
+          <Loading />
+        </div>
+        <div class="box-auth" v-else>
           <div class="send-otp" v-if="!showBoxVerifyEmail">
             <div class="title mb-30">
-              <h2 class="text-18 mb-15">ورور از طریق ایمیل</h2>
-              <p class="text-12 text-light">لطفا ایمیل خود را وارد کنید</p>
+              <h2 class="lg:text-20 text-16 mb-15">ورور از طریق ایمیل</h2>
+              <p class="text-12 lg:text-14 text-light">
+                لطفا ایمیل خود را وارد کنید
+              </p>
             </div>
             <div class="mb-40">
               <h4 class="text-12 mb-10 pr-15">ایمیل</h4>
@@ -29,8 +34,11 @@
             <Button secondary block class="mb-40" @onClick="sendOtp">
               ورود
             </Button>
-            <nuxt-link to="/" class="block text-center">
-              ورود از طریق ایمیل
+            <nuxt-link
+              to="/auth/login-phone"
+              class="block text-center lg:text-14 text-12"
+            >
+              ورود از طریق شماره تلفن همراه
             </nuxt-link>
           </div>
           <div class="verify-otp" v-if="showBoxVerifyEmail">
@@ -48,11 +56,12 @@
                 class="mb-20"
                 type="pass"
                 v-model="loginInfo.otp"
+                @onEnter="verifyOtp"
               />
             </div>
             <p
-              class="block text-center mb-40 cursor-pointer"
-              @onClick="sendOtp"
+              class="block text-center mb-40 cursor-pointer lg:text-14 text-12"
+              @click="sendOtp"
             >
               دریافت مجدد کد
             </p>
@@ -60,12 +69,13 @@
               ثبت
             </Button>
             <p
-              class="text-center cursor-pointer"
+              class="text-center cursor-pointer lg:text-14 text-12"
               @click="showBoxVerifyEmail = !showBoxVerifyEmail"
             >
               ایمیل را اشتباه وارد کرده اید
             </p>
           </div>
+          <Alert :text="error.message" class="mt-30" v-if="error.message" />
         </div>
       </BoxDark>
     </div>
@@ -81,7 +91,7 @@ export default {
     if (process.client) {
       const token = (localStorage && localStorage['token']) || ''
       if (token) {
-        return redirect("/")
+        return redirect('/')
       }
     }
   },
@@ -93,6 +103,12 @@ export default {
         otp: '',
         sign: '',
       },
+      filters: {
+        loading: false,
+      },
+      error: {
+        message: '',
+      },
     }
   },
   methods: {
@@ -101,7 +117,12 @@ export default {
         await this.sendOtpByEmailLogin()
       }
     },
+    async sendAgainOtp() {
+      await this.sendOtpByEmailLogin()
+    },
     async sendOtpByEmailLogin() {
+      this.filters.loading = true
+      this.error.message = ''
       try {
         const httpRequst = await AuthService.sendOtpEmailByLogin({
           email: this.loginInfo.email,
@@ -111,10 +132,14 @@ export default {
             ...this.loginInfo,
             sign: httpRequst?.data?.sign || '',
           }
-          this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          if(!this.showBoxVerifyEmail){
+            this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          }
+          this.filters.loading = false
         }
       } catch (error) {
-        ////
+        this.filters.loading = false
+        this.error.message = error.response.data.messages.email
       }
     },
     validateEmail() {
@@ -122,6 +147,8 @@ export default {
       return regex.test(this.loginInfo.email)
     },
     async verifyOtp() {
+      this.filters.loading = true
+      this.error.message = ''
       try {
         const httpRequest = await AuthService.verifyOtpEmailByLogin({
           otp: this.loginInfo.otp,
@@ -130,11 +157,14 @@ export default {
         if (httpRequest.isSuccess) {
           const token = httpRequest?.data?.token || ''
           localStorage.setItem('token', token)
-          this.showBoxVerifyEmail = !this.showBoxVerifyEmail;
-          this.$router.push("/")
+          this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          this.filters.loading = false
+          this.$router.push('/')
         }
       } catch (error) {
-        //
+        console.log(error)
+        this.filters.loading = false
+        this.error.message = 'رمز یکبار مصرف نامعتبر است'
       }
     },
   },

@@ -1,22 +1,23 @@
 <template>
-  <div class="auth-login-email">
+  <div class="auth-register-email">
     <div class="wrapper">
       <div class="header-auth flex items-center justify-between">
         <nuxt-link to="/">
           <IconLogo />
         </nuxt-link>
-        <Button primary class="flex items-center">
+        <Button primary class="flex items-center" @onClick="$router.push('/auth/login-phone')">
           <IconRegister />
           ورود
         </Button>
       </div>
       <BoxDark>
-        <div class="box-auth">
+        <div class="loading-wrapper" v-if="filters.loading">
+          <Loading />
+        </div>
+        <div class="box-auth" v-else>
           <div class="send-otp" v-if="!showBoxVerifyEmail">
             <div class="title mb-30">
-              <h2 class="text-18 mb-15">
-                  ثبت نام از طریق ایمیل
-              </h2>
+              <h2 class="xl:text-18 text-16 mb-15">ثبت نام از طریق ایمیل</h2>
               <p class="text-12 text-light">لطفا ایمیل خود را وارد کنید</p>
             </div>
             <div class="mb-40">
@@ -24,14 +25,14 @@
               <TextField
                 placeholder="ایمیل"
                 class="mb-20"
-                v-model="loginInfo.email"
+                v-model="registerInfo.email"
                 @onEnter="sendOtp"
               />
             </div>
             <Button secondary block class="mb-40" @onClick="sendOtp">
               ثبت نام
             </Button>
-            <nuxt-link to="/" class="block text-center">
+            <nuxt-link to="/" class="block text-center xl:text-14 text-12">
               ثبت نام از طریق شماره همراه
             </nuxt-link>
           </div>
@@ -40,7 +41,7 @@
               <h2 class="text-18 mb-15">کد فعالسازی</h2>
               <p class="text-12 text-light">
                 یک کد به آدرس
-                {{ loginInfo.email }}
+                {{ registerInfo.email }}
                 ارسال شد . لطفا کد را وارد کنید
               </p>
             </div>
@@ -49,12 +50,13 @@
                 placeholder="کد فعالسازی"
                 class="mb-20"
                 type="pass"
-                v-model="loginInfo.otp"
+                v-model="registerInfo.otp"
+                @onEnter="verifyOtp"
               />
             </div>
             <p
-              class="block text-center mb-40 cursor-pointer"
-              @onClick="sendOtp"
+              class="block text-center mb-40 cursor-pointer xl:text-14 text-12"
+              @click="sendOtp"
             >
               دریافت مجدد کد
             </p>
@@ -62,12 +64,13 @@
               ثبت
             </Button>
             <p
-              class="text-center cursor-pointer"
+              class="text-center cursor-pointer xl:text-14 text-12"
               @click="showBoxVerifyEmail = !showBoxVerifyEmail"
             >
               ایمیل را اشتباه وارد کرده اید
             </p>
           </div>
+          <Alert :text="error.message" class="mt-30" v-if="error.message" />
         </div>
       </BoxDark>
     </div>
@@ -83,60 +86,75 @@ export default {
     if (process.client) {
       const token = (localStorage && localStorage['token']) || ''
       if (token) {
-        // return redirect("/")
+        return redirect("/")
       }
     }
   },
   data() {
     return {
       showBoxVerifyEmail: false,
-      loginInfo: {
+      registerInfo: {
         email: '',
         otp: '',
         sign: '',
+      },
+      filters: {
+        loading: false,
+      },
+      error: {
+        message: '',
       },
     }
   },
   methods: {
     async sendOtp() {
       if (this.validateEmail()) {
-        await this.sendOtpByEmailLogin()
+        await this.sendOtpByEmailRegister()
       }
     },
-    async sendOtpByEmailLogin() {
+    async sendOtpByEmailRegister() {
+      this.filters.loading = true
+      this.error.message = ''
       try {
-        const httpRequst = await AuthService.sendOtpEmailByLogin({
-          email: this.loginInfo.email,
+        const httpRequest = await AuthService.sendOtpByEmailRegister({
+          email: this.registerInfo.email,
         })
-        if (httpRequst.isSuccess) {
-          this.loginInfo = {
-            ...this.loginInfo,
-            sign: httpRequst?.data?.sign || '',
+        if (httpRequest.isSuccess) {
+          this.registerInfo = {
+            ...this.registerInfo,
+            sign: httpRequest?.data?.sign || '',
           }
-          this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          if (!this.showBoxVerifyEmail) {
+            this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          }
+          this.filters.loading = false
         }
       } catch (error) {
-        ////
+        this.filters.loading = false
+        this.error.message = error?.response?.data?.messages?.email || ''
       }
     },
     validateEmail() {
       const regex = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,15}$/
-      return regex.test(this.loginInfo.email)
+      return regex.test(this.registerInfo.email)
     },
     async verifyOtp() {
+      this.filters.loading = true
       try {
-        const httpRequest = await AuthService.verifyOtpEmailByLogin({
-          otp: this.loginInfo.otp,
-          sign: this.loginInfo.sign,
+        const httpRequest = await AuthService.verifyOtpByEmailRegister({
+          otp: this.registerInfo.otp,
+          sign: this.registerInfo.sign,
         })
         if (httpRequest.isSuccess) {
           const token = httpRequest?.data?.token || ''
           localStorage.setItem('token', token)
-          this.showBoxVerifyEmail = !this.showBoxVerifyEmail;
-          this.$router.push("/")
+          this.showBoxVerifyEmail = !this.showBoxVerifyEmail
+          this.filters.loading = false
+          this.$router.push('/')
         }
       } catch (error) {
-        //
+        this.filters.loading = false
+        this.error.message = 'رمز یکبار مصرف نامعتبر است'
       }
     },
   },
